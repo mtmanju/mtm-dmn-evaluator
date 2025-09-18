@@ -1,6 +1,14 @@
 # MTM DMN Evaluator Simulator
 
-A modern, web-based Camunda DMN Simulator Service that supports DMN 7 and 8+ versions with an elegant, minimal, and premium user interface.
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Camunda DMN](https://img.shields.io/badge/Camunda%20DMN-7.23.0-blue.svg)](https://camunda.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Build Status](https://github.com/yourusername/mtm-dmn-evaluator/workflows/CI/badge.svg)](https://github.com/yourusername/mtm-dmn-evaluator/actions)
+
+> **A modern, web-based Camunda DMN Simulator Service that supports DMN 7 and 8+ versions with an elegant, minimal, and premium user interface.**
+
+**Keywords**: `Camunda DMN`, `DMN Simulator`, `DMN Evaluator`, `Decision Management`, `Business Rules`, `DMN Engine`, `Camunda BPM`, `DMN 7`, `DMN 8`, `Decision Tables`, `Rule Engine`, `Spring Boot`, `Java DMN`, `DMN Testing`, `Decision Model Notation`
 
 ## 🏗️ Architecture Overview
 
