@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMN Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fafafa;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #f3f4f6;
+            padding: 24px 0;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .main-content {
+            padding: 48px 0;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #f3f4f6;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+        }
+
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 48px 24px;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: #fafafa;
+        }
+
+        .upload-area:hover {
+            border-color: #9ca3af;
+            background: #f9fafb;
+        }
+
+        .upload-area.dragover {
+            border-color: #1a1a1a;
+            background: #f3f4f6;
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 20px;
+            color: #6b7280;
+        }
+
+        .upload-text {
+            color: #6b7280;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtext {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+
+        .btn-primary:hover {
+            background: #374151;
+            border-color: #374151;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #6b7280;
+            border-color: #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #1a1a1a;
+            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .result-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .result-value {
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-error {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid #1a1a1a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .back-link {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .back-link:hover {
+            color: #1a1a1a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .section {
+                padding: 24px;
+            }
+            
+            .upload-area {
+                padding: 32px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <a href="/" class="back-link">
+                ← Back to Home
+            </a>
+            <h1>DMN Simulator</h1>
+            <p>Upload and evaluate your DMN decision tables</p>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <!-- Upload Section -->
+            <div class="section">
+                <h2>Upload DMN File</h2>
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Drop your DMN file here or click to browse</div>
+                    <div class="upload-subtext">Supports .dmn and .xml files</div>
+                    <input type="file" id="fileInput" class="file-input" accept=".dmn,.xml">
+                </div>
+                <div id="fileInfo" class="hidden" style="margin-top: 16px; padding: 16px; background: #f8f9fa; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span id="fileName"></span>
+                        <button type="button" class="btn btn-secondary" onclick="clearFile()">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Form Section -->
+            <div class="section hidden" id="inputFormSection">
+                <h2>Decision Inputs</h2>
+                <form id="inputForm">
+                    <div id="inputFields"></div>
+                    <div style="margin-top: 24px;">
+                        <button type="submit" class="btn btn-primary">Evaluate Decision</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Loading Section -->
+            <div class="loading hidden" id="loadingSection">
+                <div class="loading-spinner"></div>
+                <div>Evaluating decision...</div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="section hidden" id="resultsSection">
+                <h2>Evaluation Results</h2>
+                <div id="resultsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const inputFormSection = document.getElementById('inputFormSection');
+        const inputForm = document.getElementById('inputForm');
+        const inputFields = document.getElementById('inputFields');
+        const loadingSection = document.getElementById('loadingSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsContent = document.getElementById('resultsContent');
+
+        let currentDecision = null;
+
+        // Upload area click handler
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Drag and drop handlers
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // File input change handler
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            if (!file.name.endsWith('.dmn') && !file.name.endsWith('.xml')) {
+                alert('Please select a valid DMN file (.dmn or .xml)');
+                return;
+            }
+
+            fileName.textContent = file.name;
+            fileInfo.classList.remove('hidden');
+
+            // Upload file
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/api/dmn/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                currentDecision = data;
+                generateInputForm(data.inputs);
+                inputFormSection.classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error uploading file:', error);
+                alert('Error uploading file. Please try again.');
+            });
+        }
+
+        function generateInputForm(inputs) {
+            inputFields.innerHTML = '';
+            
+            inputs.forEach(input => {
+                const div = document.createElement('div');
+                div.className = 'form-group';
+                
+                const label = document.createElement('label');
+                label.className = 'form-label';
+                label.textContent = input.label || input.id;
+                label.setAttribute('for', input.id);
+                
+                let inputElement;
+                if (input.type === 'boolean') {
+                    inputElement = document.createElement('select');
+                    inputElement.className = 'form-select';
+                    inputElement.id = input.id;
+                    inputElement.innerHTML = `
+                        <option value="">Select...</option>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    `;
+                } else if (input.type === 'number' || input.type === 'integer') {
+                    inputElement = document.createElement('input');
+                    inputElement.type = 'number';
+                    inputElement.className = 'form-input';
+                    inputElement.id = input.id;
+                    inputElement.placeholder = 'Enter number...';
+                } else {
+                    inputElement = document.createElement('input');
+                    inputElement.type = 'text';
+                    inputElement.className = 'form-input';
+                    inputElement.id = input.id;
+                    inputElement.placeholder = 'Enter value...';
+                }
+                
+                div.appendChild(label);
+                div.appendChild(inputElement);
+                inputFields.appendChild(div);
+            });
+        }
+
+        function clearFile() {
+            fileInput.value = '';
+            fileInfo.classList.add('hidden');
+            inputFormSection.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+            currentDecision = null;
+        }
+
+        // Form submission handler
+        inputForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const inputValues = {};
+            const inputs = currentDecision.inputs;
+            
+            inputs.forEach(input => {
+                const element = document.getElementById(input.id);
+                if (element) {
+                    let value = element.value;
+                    
+                    // Convert value based on type
+                    if (input.type === 'number' || input.type === 'integer') {
+                        value = value ? parseFloat(value) : null;
+                    } else if (input.type === 'boolean') {
+                        value = value === 'true' ? true : value === 'false' ? false : null;
+                    }
+                    
+                    // Use the input expression (e.g., "creditScore") instead of input ID (e.g., "Input_1")
+                    const inputKey = input.expression || input.id;
+                    inputValues[inputKey] = value;
+                }
+            });
+
+            // Show loading
+            loadingSection.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+
+            // Evaluate decision
+            console.log('Sending evaluation request:', {
+                decisionId: currentDecision.id,
+                inputs: inputValues
+            });
+            
+            fetch('/api/dmn/evaluate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    decisionId: currentDecision.id,
+                    inputs: inputValues
+                })
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Evaluation result:', data);
+                loadingSection.classList.add('hidden');
+                displayResults(data);
+                resultsSection.classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error evaluating decision:', error);
+                loadingSection.classList.add('hidden');
+                alert('Error evaluating decision: ' + error.message);
+            });
+        });
+
+        function displayResults(result) {
+            resultsContent.innerHTML = '';
+            
+            const resultCard = document.createElement('div');
+            resultCard.className = 'result-card';
+            
+            const title = document.createElement('div');
+            title.className = 'result-title';
+            title.textContent = result.decisionName || 'Decision Results';
+            resultCard.appendChild(title);
+            
+            if (result.matched) {
+                const status = document.createElement('div');
+                status.className = 'status-badge status-success';
+                status.textContent = '✓ Rule Matched';
+                resultCard.appendChild(status);
+                
+                if (result.outputs && Object.keys(result.outputs).length > 0) {
+                    Object.entries(result.outputs).forEach(([key, value]) => {
+                        const item = document.createElement('div');
+                        item.className = 'result-item';
+                        item.innerHTML = `
+                            <span class="result-label">${key}</span>
+                            <span class="result-value">${value}</span>
+                        `;
+                        resultCard.appendChild(item);
+                    });
+                }
+            } else {
+                const status = document.createElement('div');
+                status.className = 'status-badge status-error';
+                status.textContent = '✗ No Rules Matched';
+                resultCard.appendChild(status);
+            }
+            
+            resultsContent.appendChild(resultCard);
+        }
+    </script>
+</body>
+</html>

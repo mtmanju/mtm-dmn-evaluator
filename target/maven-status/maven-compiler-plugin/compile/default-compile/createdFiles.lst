@@ -1,0 +1,8 @@
+com/mtm/dmn/service/DmnService.class
+com/mtm/dmn/controller/WebController.class
+com/mtm/dmn/model/DmnResult.class
+com/mtm/dmn/model/DmnOutput.class
+com/mtm/dmn/controller/DmnController.class
+com/mtm/dmn/DmnEvaluatorApplication.class
+com/mtm/dmn/model/DmnInput.class
+com/mtm/dmn/model/DmnDecision.class

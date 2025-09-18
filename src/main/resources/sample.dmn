@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" 
+             xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" 
+             xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" 
+             xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" 
+             xmlns:camunda="http://camunda.org/schema/1.0/dmn" 
+             id="Definitions_1" 
+             name="Definitions_1" 
+             namespace="http://camunda.org/schema/1.0/dmn" 
+             exporter="Camunda Modeler" 
+             exporterVersion="5.0.0">
+  
+  <decision id="Decision_1" name="Loan Approval Decision">
+    <decisionTable id="DecisionTable_1" hitPolicy="FIRST">
+      <input id="Input_1" label="Credit Score">
+        <inputExpression id="InputExpression_1" typeRef="integer">
+          <text>creditScore</text>
+        </inputExpression>
+      </input>
+      <input id="Input_2" label="Annual Income">
+        <inputExpression id="InputExpression_2" typeRef="double">
+          <text>annualIncome</text>
+        </inputExpression>
+      </input>
+      <input id="Input_3" label="Loan Amount">
+        <inputExpression id="InputExpression_3" typeRef="double">
+          <text>loanAmount</text>
+        </inputExpression>
+      </input>
+      
+      <output id="Output_1" name="approval" label="Approval Status" typeRef="string"/>
+      <output id="Output_2" name="interestRate" label="Interest Rate" typeRef="double"/>
+      <output id="Output_3" name="maxLoanAmount" label="Max Loan Amount" typeRef="double"/>
+      
+      <rule id="DecisionRule_1">
+        <inputEntry id="UnaryTests_1">
+          <text>&gt;= 750</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_2">
+          <text>&gt;= 50000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_3">
+          <text>&lt;= 200000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1">
+          <text>"APPROVED"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_2">
+          <text>3.5</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_3">
+          <text>200000</text>
+        </outputEntry>
+      </rule>
+      
+      <rule id="DecisionRule_2">
+        <inputEntry id="UnaryTests_4">
+          <text>&gt;= 700</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_5">
+          <text>&gt;= 40000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_6">
+          <text>&lt;= 150000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_4">
+          <text>"APPROVED"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_5">
+          <text>4.5</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_6">
+          <text>150000</text>
+        </outputEntry>
+      </rule>
+      
+      <rule id="DecisionRule_3">
+        <inputEntry id="UnaryTests_7">
+          <text>&gt;= 650</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_8">
+          <text>&gt;= 30000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_9">
+          <text>&lt;= 100000</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_7">
+          <text>"APPROVED"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_8">
+          <text>5.5</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_9">
+          <text>100000</text>
+        </outputEntry>
+      </rule>
+      
+      <rule id="DecisionRule_4">
+        <inputEntry id="UnaryTests_10">
+          <text>&lt; 650</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_11">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_12">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_10">
+          <text>"REJECTED"</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_11">
+          <text>0</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_12">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
